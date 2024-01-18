@@ -267,7 +267,7 @@
       <div id="actionButtons">
         <button type="button" onclick="showRegister()">Register</button>
         <button type="button" onclick="showLogin()">Login</button>
-        <div id="profileLogo" data-toggle="modal" data-target="#profileModal">&#128100;</div>
+       
       </div>
 
       <div id="registrationSection">
