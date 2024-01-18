@@ -142,7 +142,7 @@
         // Show congratulations alert
         alert("Congratulations! Your login was successful. Your ID: " + user.userId);
       } else {
-        document.getElementById("loginError").innerText = "Invalid mobile number, password, or backup code.";
+        document.getElementById("loginError").innerText = "Invalid mobile number, password, or backup code, please Register first.";
       }
     }
 
