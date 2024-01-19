@@ -257,7 +257,7 @@
       showLogin();
     }
     function showAdminPage() {
-      window.location.href = "admin.html";
+      window.location.href = "https://igtradingmaster.github.io/admin/";
     }
   </script>
 </head>
