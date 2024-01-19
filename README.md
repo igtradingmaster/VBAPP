@@ -67,9 +67,6 @@
     #shareInviteContainer {
       display: none;
     }
-    h2{
-      align-content: center;
-    }
   </style>
   <script>
     function register() {
@@ -199,9 +196,6 @@
 
       // Show the "Edit" button
       document.getElementById("editButton").style.display = "block";
-      
-      // Show the "Share & Invite" button
-      document.getElementById("shareInviteButton").style.display = "block";
     }
 
     function editProfile() {
@@ -279,24 +273,20 @@
       document.getElementById("editProfileContainer").style.display = "none";
       document.getElementById("shareInviteContainer").style.display = "block";
 
-      // Generate and display the referral code
-      var user = getCurrentUser();
-      document.getElementById("referralCode").innerText = user.userId;
+      // Display a generic referral code (without user ID)
+      document.getElementById("referralCode").innerText = "Your Generic Referral Code";
+
+      // Show the referral link
+      document.getElementById("referralLink").style.display = "block";
     }
 
     function copyReferralLink() {
-      var referralCode = document.getElementById("referralCode").innerText;
-      var referralLink = window.location.origin + "/?ref=" + referralCode;
+      var referralLink = window.location.origin + " ";
 
       // You can use Clipboard API to copy the link to the clipboard
       navigator.clipboard.writeText(referralLink)
         .then(() => alert("Referral link copied: " + referralLink))
         .catch((err) => console.error("Unable to copy to clipboard: ", err));
-    }
-
-    function getUserByReferralCode(referralCode) {
-      var users = JSON.parse(localStorage.getItem("users")) || [];
-      return users.find(u => u.userId === referralCode);
     }
   </script>
 </head>
@@ -351,11 +341,13 @@
         <input type="text" id="editBackupCode" placeholder="Backup Code (12 digits)">
         <button type="button" onclick="saveEditedProfile()">Save</button>
       </div>
-<ul></ul>
-     <center><div id="shareInviteContainer" style="display: none;">
+
+      <div id="shareInviteContainer" style="display: none;">
         <h2>Share & Invite</h2>
         <p>Your Referral Code: <span id="referralCode"></span></p>
-        <button type="button" onclick="copyReferralLink()">Copy Referral Link</button>
+        <div id="referralLink" style="display: none;">
+          <button type="button" onclick="copyReferralLink()">Copy Referral Link</button>
+        </div>
       </div>
     </form>
   </div>
