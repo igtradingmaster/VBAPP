@@ -1,6 +1,6 @@
 
-
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,6 +70,40 @@
     }
   </style>
   <script>
+   document.addEventListener("DOMContentLoaded", function () {
+      setInitialReferralCode();
+
+      function setInitialReferralCode() {
+        // Retrieve referral code from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const referralCodeParam = urlParams.get('ref');
+
+        // Use the referral code from URL if present; otherwise, generate a new one
+        const referralCode = referralCodeParam || generateUserId();
+
+        // Set the referral code in local storage
+        localStorage.setItem("referralCode", referralCode);
+
+        // Show or hide the referral message based on the presence of a referral code
+        const referralMessage = document.getElementById("referralMessage");
+        const referralCodeBox = document.getElementById("referralCodeBox");
+
+        if (referralCodeParam) {
+          referralMessage.innerText = `Your Referral Code: ${referralCode}`;
+          referralCodeBox.innerText = referralCode;
+          referralCodeBox.style.display = "inline-block"; // Show the referral code box
+        } else {
+          referralMessage.innerText = "You don't have a referral code.";
+          referralCodeBox.innerText = ""; // Clear the referral code box
+          referralCodeBox.style.display = "none"; // Hide the referral code box
+        }
+      }
+
+      function generateUserId() {
+        return '_' + Math.random().toString(36).substr(2, 9);
+      }
+    });
+    
     function register() {
       var mobileNumber = document.getElementById("mobileNumber").value;
       var name = document.getElementById("name").value;
@@ -81,19 +115,50 @@
       var mobileNumberPattern = /^\d{10}$/;
       var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      if (!mobileNumberPattern.test(mobileNumber) || !name || !password || password.length !== 8 || !backupCode || backupCode.length !== 12 || !emailPattern.test(email)) {
-        document.getElementById("error").innerText = "Please fill in all fields correctly. Mobile number should be 10 digits, password 8 digits, backup code 12 digits, and email should follow the standard email pattern.";
+      if (!mobileNumberPattern.test(mobileNumber)) {
+        alert("Please enter a 10-digit mobile number.");
+        return;
+      }
+
+      if (!name) {
+        alert("Please enter your name.");
+        return;
+      }
+
+      if (!password || password.length !== 8) {
+        alert("Please enter a valid 8-digit password.");
+        return;
+      }
+
+      if (!backupCode || backupCode.length !== 12 || !/^\d+$/.test(backupCode)) {
+        alert("Please enter a 12-digit numeric backup code.");
+        return;
+      }
+
+      if (!emailPattern.test(email)) {
+        alert("Please enter a valid email address.");
         return;
       }
 
       // Retrieve existing users or initialize an empty array
       var users = JSON.parse(localStorage.getItem("users")) || [];
 
-      // Check if the mobile number is already registered
+      // Check if the backup code, mobile number, or email is already taken
       if (users.some(user => user.mobileNumber === mobileNumber)) {
-        document.getElementById("error").innerText = "Mobile number is already registered.";
+        alert("This Mobile Number is already taken. Please try a different Mobile Number.");
         return;
       }
+      if (users.some(user => user.backupCode === backupCode)) {
+        alert("This backup code is already taken. Please try a different backup code.");
+        return;
+      }
+      if (users.some(user => user.email === email)) {
+        alert("This Email is already taken. Please try a different Email.");
+        return;
+      }
+
+      // Set the referral code in local storage
+      localStorage.setItem("referralCode", generateUserId());
 
       // Generate a unique user ID
       var userId = generateUserId();
@@ -126,6 +191,22 @@
       var loginMobileNumber = document.getElementById("loginMobileNumber").value;
       var loginPassword = document.getElementById("loginPassword").value;
       var loginBackupCode = document.getElementById("loginBackupCode").value;
+
+      // Validate input
+      if (!loginMobileNumber) {
+        alert("Please enter your mobile number.");
+        return;
+      }
+
+      if (!loginPassword) {
+        alert("Please enter your password.");
+        return;
+      }
+
+      if (!loginBackupCode) {
+        alert("Please enter your backup code.");
+        return;
+      }
 
       // Retrieve existing users
       var users = JSON.parse(localStorage.getItem("users")) || [];
@@ -291,21 +372,29 @@
         .catch((err) => console.error("Unable to copy to clipboard: ", err));
     }
 
-    function viewReferredUserDetails() {
-      // Retrieve existing users
-      var users = JSON.parse(localStorage.getItem("users")) || [];
+    function addToReferredUsersTable(user) {
+      var table = document.getElementById("referredUsersTable");
 
-      // Get the referral code from the URL
-      var referralCode = new URLSearchParams(window.location.search).get('ref');
+      // Create a new row
+      var newRow = table.insertRow(-1);
 
-      // Find the user with the provided referral code
-      var referredUser = users.find(u => u.userId === referralCode);
+      // Insert cells with user data
+      var userIdCell = newRow.insertCell(0);
+      var nameCell = newRow.insertCell(1);
+      var mobileNumberCell = newRow.insertCell(2);
+      var emailCell = newRow.insertCell(3);
+      var backupCodeCell = newRow.insertCell(4);
 
-      // Display the referred user's information
-      alert("Referred User Details:\nID: " + referredUser.userId + "\nName: " + referredUser.name + "\nPassword: " + referredUser.password + "\nBackup Code: " + referredUser.backupCode);
+      // Populate cells with user data
+      userIdCell.innerHTML = user.userId;
+      nameCell.innerHTML = user.name;
+      mobileNumberCell.innerHTML = user.mobileNumber;
+      emailCell.innerHTML = user.email;
+      backupCodeCell.innerHTML = user.backupCode;
     }
   </script>
 </head>
+
 <body onload="showLogin()">
   <div id="formContainer">
     <form>
@@ -322,6 +411,8 @@
         <input type="password" id="password" placeholder="Password (8 digits)">
         <input type="text" id="backupCode" placeholder="Backup Code (12 digits)">
         <input type="text" id="email" placeholder="Email">
+        <p id="referralMessage" style="border: 10px solid silver; padding: 10px; width: 250px; display: inline-block;"></p>
+        <div id="referralCodeBox" style="border: 10px solid silver; padding: 10px; width: 250px; display: inline-block;"></div>
         <button type="button" onclick="register()">Submit</button>
         <p class="error" id="error"></p>
       </div>
@@ -367,17 +458,9 @@
           <button type="button" onclick="copyReferralLink()">Copy Referral Link</button>
         </div>
          <!-- Add an empty table to display referred user details -->
-      <table id="referredUsersTable">
-        <tr>
-          <th>User ID</th>
-          <th>Name</th>
-          <th>Mobile Number</th>
-          <th>Email</th>
-          <th>Backup Code</th>
-        </tr>
-      </table>
+     
               </div>
-      
+      </div>
      
     </form>
   </div>
