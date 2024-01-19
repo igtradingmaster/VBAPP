@@ -262,31 +262,46 @@
     }
 
     function showAdminPage() {
-      window.location.href = "colorprediciton.html";
+      window.location.href = "colorprediction.html";
     }
 
     function showShareInvite() {
-      // Hide other sections and show the Share & Invite section
-      document.getElementById("registrationSection").style.display = "none";
-      document.getElementById("loginSection").style.display = "none";
-      document.getElementById("profileContainer").style.display = "none";
-      document.getElementById("editProfileContainer").style.display = "none";
+      // Display the "Share & Invite" container
       document.getElementById("shareInviteContainer").style.display = "block";
 
-      // Display a generic referral code (without user ID)
-      document.getElementById("referralCode").innerText = "Your Generic Referral Code";
+      // Generate and display the referral code
+      var referralCode = getCurrentUser().userId;
+      document.getElementById("referralCode").innerText = referralCode;
 
-      // Show the referral link
+      // Display the referral link
       document.getElementById("referralLink").style.display = "block";
     }
 
     function copyReferralLink() {
-      var referralLink = window.location.origin + " ";
+      var baseUrl = "https://igtradingmaster.github.io/LOGIN/";
+      var referralCode = getCurrentUser().userId;
+
+      // Append the referral code to the URL
+      var fullUrl = baseUrl + "?ref=" + referralCode;
 
       // You can use Clipboard API to copy the link to the clipboard
-      navigator.clipboard.writeText(referralLink)
-        .then(() => alert("Referral link copied: " + referralLink))
+      navigator.clipboard.writeText(fullUrl)
+        .then(() => alert("Referral Link copied: " + fullUrl))
         .catch((err) => console.error("Unable to copy to clipboard: ", err));
+    }
+
+    function viewReferredUserDetails() {
+      // Retrieve existing users
+      var users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // Get the referral code from the URL
+      var referralCode = new URLSearchParams(window.location.search).get('ref');
+
+      // Find the user with the provided referral code
+      var referredUser = users.find(u => u.userId === referralCode);
+
+      // Display the referred user's information
+      alert("Referred User Details:\nID: " + referredUser.userId + "\nName: " + referredUser.name + "\nPassword: " + referredUser.password + "\nBackup Code: " + referredUser.backupCode);
     }
   </script>
 </head>
@@ -339,11 +354,14 @@
         <input type="text" id="editName" placeholder="Name">
         <input type="password" id="editPassword" placeholder="Password (8 digits)">
         <input type="text" id="editBackupCode" placeholder="Backup Code (12 digits)">
+        <input type="text" id="editEmail" placeholder="Email">
         <button type="button" onclick="saveEditedProfile()">Save</button>
       </div>
 
       <div id="shareInviteContainer" style="display: none;">
         <h2>Share & Invite</h2>
+        <p>Your Referral Code: <span id="referralCode"></span></p>
+
         <p>Your Referral Code: <span id="referralCode"></span></p>
         <div id="referralLink" style="display: none;">
           <button type="button" onclick="copyReferralLink()">Copy Referral Link</button>
@@ -351,5 +369,6 @@
       </div>
     </form>
   </div>
+
 </body>
 </html>
