@@ -63,8 +63,12 @@
     }
 
     #profileContainer,
-    #editProfileContainer {
+    #editProfileContainer,
+    #shareInviteContainer {
       display: none;
+    }
+    h2{
+      align-content: center;
     }
   </style>
   <script>
@@ -142,7 +146,7 @@
         // Show congratulations alert
         alert("Congratulations! Your login was successful. Your ID: " + user.userId);
       } else {
-        document.getElementById("loginError").innerText = "Invalid mobile number, password, or backup code, please Register first.";
+        document.getElementById("loginError").innerText = "Invalid mobile number, password, or backup code.";
       }
     }
 
@@ -163,6 +167,7 @@
       document.getElementById("loginSection").style.display = "block";
       document.getElementById("profileContainer").style.display = "none";
       document.getElementById("editProfileContainer").style.display = "none";
+      document.getElementById("shareInviteContainer").style.display = "none";
     }
 
     function showRegister() {
@@ -170,6 +175,7 @@
       document.getElementById("registrationSection").style.display = "block";
       document.getElementById("profileContainer").style.display = "none";
       document.getElementById("editProfileContainer").style.display = "none";
+      document.getElementById("shareInviteContainer").style.display = "none";
     }
 
     function generateUserId() {
@@ -181,6 +187,7 @@
       document.getElementById("loginSection").style.display = "none";
       document.getElementById("profileContainer").style.display = "block";
       document.getElementById("editProfileContainer").style.display = "none";
+      document.getElementById("shareInviteContainer").style.display = "none";
 
       // Display user information in the profile section
       document.getElementById("profileUserId").innerText = "User ID: " + user.userId;
@@ -192,6 +199,9 @@
 
       // Show the "Edit" button
       document.getElementById("editButton").style.display = "block";
+      
+      // Show the "Share & Invite" button
+      document.getElementById("shareInviteButton").style.display = "block";
     }
 
     function editProfile() {
@@ -256,8 +266,37 @@
       // Redirect to login form
       showLogin();
     }
+
     function showAdminPage() {
-      window.location.href = "https://igtradingmaster.github.io/admin/";
+      window.location.href = "colorprediciton.html";
+    }
+
+    function showShareInvite() {
+      // Hide other sections and show the Share & Invite section
+      document.getElementById("registrationSection").style.display = "none";
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("profileContainer").style.display = "none";
+      document.getElementById("editProfileContainer").style.display = "none";
+      document.getElementById("shareInviteContainer").style.display = "block";
+
+      // Generate and display the referral code
+      var user = getCurrentUser();
+      document.getElementById("referralCode").innerText = user.userId;
+    }
+
+    function copyReferralLink() {
+      var referralCode = document.getElementById("referralCode").innerText;
+      var referralLink = window.location.origin + "/?ref=" + referralCode;
+
+      // You can use Clipboard API to copy the link to the clipboard
+      navigator.clipboard.writeText(referralLink)
+        .then(() => alert("Referral link copied: " + referralLink))
+        .catch((err) => console.error("Unable to copy to clipboard: ", err));
+    }
+
+    function getUserByReferralCode(referralCode) {
+      var users = JSON.parse(localStorage.getItem("users")) || [];
+      return users.find(u => u.userId === referralCode);
     }
   </script>
 </head>
@@ -267,7 +306,7 @@
       <div id="actionButtons">
         <button type="button" onclick="showRegister()">Register</button>
         <button type="button" onclick="showLogin()">Login</button>
-       
+        <div id="profileLogo" data-toggle="modal" data-target="#profileModal">&#128100; Login</div>
       </div>
 
       <div id="registrationSection">
@@ -299,6 +338,7 @@
         <p id="profileBackupCode"></p>
         <p id="profileEmail"></p>
         <button type="button" id="editButton" onclick="editProfile()">Edit</button>
+        <button type="button" id="shareInviteButton" onclick="showShareInvite()">Share & Invite</button>
         <button type="button" onclick="logout()">Logout</button>
       </div>
 
@@ -310,6 +350,12 @@
         <input type="password" id="editPassword" placeholder="Password (8 digits)">
         <input type="text" id="editBackupCode" placeholder="Backup Code (12 digits)">
         <button type="button" onclick="saveEditedProfile()">Save</button>
+      </div>
+<ul></ul>
+     <center><div id="shareInviteContainer" style="display: none;">
+        <h2>Share & Invite</h2>
+        <p>Your Referral Code: <span id="referralCode"></span></p>
+        <button type="button" onclick="copyReferralLink()">Copy Referral Link</button>
       </div>
     </form>
   </div>
