@@ -68,6 +68,70 @@
     #shareInviteContainer {
       display: none;
     }
+    #counts {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #counts p {
+      margin: 5px;
+    }
+    #status {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+}
+#onlineUsersContainer {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #onlineUsersList {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #onlineUsersList li {
+      margin-bottom: 5px;
+    }
+    header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-info {
+            margin-bottom: 1rem;
+        }
+
+        .reviews {
+            margin-bottom: 1rem;
+        }
+
+        .advertisement {
+            text-align: center;
+            margin-bottom: 1rem;
+            background-color: #ddd;
+            padding: 1rem;
+        }
+
+        .product {
+            margin-bottom: 1rem;
+        }
+
+        .download-button {
+            text-align: center;
+            margin-top: 1rem;
+        }
   </style>
   <script>
    document.addEventListener("DOMContentLoaded", function () {
@@ -225,7 +289,7 @@
         // Show congratulations alert
         alert("Congratulations! Your login was successful. Your ID: " + user.userId);
       } else {
-        document.getElementById("loginError").innerText = "Invalid mobile number, password, or backup code.";
+        document.getElementById("loginError").innerText = "Invalid mobile number, password, or backup code!!, Please Register And Login.";
       }
     }
 
@@ -237,8 +301,10 @@
         localStorage.removeItem("expirationTime");
       }
     }
+    var isLoggedIn = false; // Variable to track login status
 
     function showLogin() {
+      
       // Check for expiration before showing the login form
       checkExpiration();
 
@@ -247,6 +313,9 @@
       document.getElementById("profileContainer").style.display = "none";
       document.getElementById("editProfileContainer").style.display = "none";
       document.getElementById("shareInviteContainer").style.display = "none";
+
+      // Update login status
+    isLoggedIn = false;
     }
 
     function showRegister() {
@@ -262,6 +331,7 @@
     }
 
     function showProfile(user) {
+    
       document.getElementById("registrationSection").style.display = "none";
       document.getElementById("loginSection").style.display = "none";
       document.getElementById("profileContainer").style.display = "block";
@@ -276,8 +346,15 @@
       document.getElementById("profileBackupCode").innerText = "Backup Code: " + user.backupCode;
       document.getElementById("profileEmail").innerText = "Email: " + user.email;
 
-      // Show the "Edit" button
-      document.getElementById("editButton").style.display = "block";
+      // Show the "Edit" and "Close" buttons
+  document.getElementById("editButton").style.display = "block";
+  document.getElementById("closeButton").style.display = "block";
+
+      // Set the user's status to "online"
+    document.getElementById("status").innerText = "Status: Online";
+
+     // Update login status
+     isLoggedIn = true;
     }
 
     function editProfile() {
@@ -294,6 +371,24 @@
       document.getElementById("editBackupCode").value = user.backupCode;
       document.getElementById("editEmail").value = user.email;
     }
+    
+
+  // Function to handle page load
+  function onPageLoad() {
+    // Check if the URL has a 'ref' parameter
+    var referredBy = getQueryParameter('ref');
+    if (referredBy) {
+      // Update the totalInvited count if the user was referred
+      addToReferredUsersTable({ userId: 'NewUser', name: 'New User' }); // Replace with actual user data
+    }
+    // Hide the close button during editing
+  document.getElementById("closeButton").style.display = "none";
+
+    // Set the user's referral code and totalInvited count
+    document.getElementById("referralCode").innerText = userReferralCode;
+    updateTotalInvited();
+  }
+
 
     function saveEditedProfile() {
       var editedUserId = document.getElementById("editUserId").value;
@@ -334,10 +429,54 @@
       return users.find(u => u.userId === userId);
     }
 
+    function addToOnlineUsersList(user) {
+      var onlineUsersList = document.getElementById("onlineUsersList");
+      var listItem = document.createElement("li");
+      listItem.innerText = "ID: " + user.userId + ", Name: " + user.name;
+      onlineUsersList.appendChild(listItem);
+    }
+
     function logout() {
+      // Set the user's status to "offline"
+    document.getElementById("status").innerText = "Status: Offline";
+
       // Clear stored data when the user logs out
       localStorage.removeItem("users");
       localStorage.removeItem("expirationTime");
+
+      function removeUserFromOnlineUsersList() {
+      var onlineUsersList = document.getElementById("onlineUsersList");
+      onlineUsersList.innerHTML = ""; // Clear the online users list
+    }
+    function listOnlineUsers() {
+      var onlineUsersContainer = document.getElementById("onlineUsersContainer");
+
+      // Toggle the display of the online users container
+      if (onlineUsersContainer.style.display === "none") {
+        onlineUsersContainer.style.display = "block";
+        populateOnlineUsersList();
+      } else {
+        onlineUsersContainer.style.display = "none";
+      }
+    }
+
+    function populateOnlineUsersList() {
+      // Retrieve existing users
+      var users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // Filter online users (you may need to adjust this based on your user status)
+      var onlineUsers = users.filter(user => user.status === "online");
+
+      // Clear and populate the online users list
+      var onlineUsersList = document.getElementById("onlineUsersList");
+      onlineUsersList.innerHTML = "";
+
+      onlineUsers.forEach(user => {
+        var listItem = document.createElement("li");
+        listItem.innerText = "ID: " + user.userId + ", Name: " + user.name;
+        onlineUsersList.appendChild(listItem);
+      });
+    }
 
       // Redirect to login form
       showLogin();
@@ -357,6 +496,7 @@
 
       // Display the referral link
       document.getElementById("referralLink").style.display = "block";
+       document.getElementById("closeButton").style.display = "block";
     }
 
     function copyReferralLink() {
@@ -392,6 +532,23 @@
       emailCell.innerHTML = user.email;
       backupCodeCell.innerHTML = user.backupCode;
     }
+    let totalInvited = 0;
+  let userReferralCode = '';
+  function closeProfile() {
+  document.getElementById("profileContainer").style.display = "none";
+}
+function searchUser() {
+  var searchUserName = document.getElementById("searchUserName").value;
+  var users = JSON.parse(localStorage.getItem("users")) || [];
+
+  // Find the user with the provided name
+  var user = users.find(u => u.name.toLowerCase() === searchUserName.toLowerCase());
+
+  // Display the search result
+  var searchResultContainer = document.getElementById("searchResult");
+
+}
+
   </script>
 </head>
 
@@ -425,20 +582,29 @@
         <button type="button" onclick="login()">Login</button>
         <p class="error" id="loginError"></p>
       </div>
-
+     
       <div id="profileContainer">
-        <h2>Profile</h2>
+        <h2>Profile</h2><center><button type="button" id="editButton" onclick="editProfile()">Edit Your Profile</button>  
         <p id="profileUserId"></p>
         <p id="profileMobileNumber"></p>
         <p id="profileName"></p>
         <p id="profilePassword"></p>
         <p id="profileBackupCode"></p>
         <p id="profileEmail"></p>
-        <button type="button" id="editButton" onclick="editProfile()">Edit</button>
+        <p id="status">Loading...</p>
+        
         <button type="button" id="shareInviteButton" onclick="showShareInvite()">Share & Invite</button>
-        <button type="button" onclick="logout()">Logout</button>
+        <button type="button" onclick="logout()">Logout</button><ul></ul>
+        <center><button type="button" id="closeButton" onclick="closeProfile()">Close</button>
       </div>
+     <!-- Add the following code inside the <body> tag, after the existing content -->
+<div id="appsContainer" style="display: none;">
+  <h2>All Apps</h2>
+  <input type="text" id="searchApp" placeholder="Search Apps" oninput="filterApps()">
+  <ul id="appList"></ul>
+</div>
 
+      
       <div id="editProfileContainer">
         <h2>Edit Profile</h2>
         <input type="text" id="editUserId" disabled>
@@ -449,20 +615,15 @@
         <input type="text" id="editEmail" placeholder="Email">
         <button type="button" onclick="saveEditedProfile()">Save</button>
       </div>
-
       <div id="shareInviteContainer" style="display: none;">
         <h2>Share & Invite</h2>
         <p>Your Referral Code: <span id="referralCode"></span></p>
-        <p>Referral Link: <span id="fullReferralLink"></span></p>
+        <p>Referral Link: https://igtradingmaster.github.io/LOGIN/?ref= <span id="fullReferralLink"></span></p>
         <div id="referralLink" style="display: none;">
-          <button type="button" onclick="copyReferralLink()">Copy Referral Link</button>
+          <button type="button" onclick="copyReferralLink()">Copy Referral Link</button> <ul></ul>
+          <p>Your total Invited: <span id="totalInvited"></span></p>
         </div>
-         <!-- Add an empty table to display referred user details -->
-     
-              </div>
       </div>
-     
-    </form>
-  </div>
+     </form>
 </body>
 </html>
