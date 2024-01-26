@@ -597,12 +597,7 @@ function searchUser() {
         <button type="button" onclick="logout()">Logout</button><ul></ul>
         <center><button type="button" id="closeButton" onclick="closeProfile()">Close</button>
       </div>
-     <!-- Add the following code inside the <body> tag, after the existing content -->
-<div id="appsContainer" style="display: none;">
-  <h2>All Apps</h2>
-  <input type="text" id="searchApp" placeholder="Search Apps" oninput="filterApps()">
-  <ul id="appList"></ul>
-</div>
+  
 
       
       <div id="editProfileContainer">
