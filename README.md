@@ -596,7 +596,7 @@ function searchUser() {
         <button type="button" id="shareInviteButton" onclick="showShareInvite()">Share & Invite</button>
         <button type="button" onclick="logout()">Logout</button><ul></ul>
         <center><button type="button" id="closeButton" onclick="closeProfile()">Close</button>
-      </div>
+      
   
 
       
@@ -613,7 +613,7 @@ function searchUser() {
       <div id="shareInviteContainer" style="display: none;">
         <h2>Share & Invite</h2>
         <p>Your Referral Code: <span id="referralCode"></span></p>
-        <p>Referral Link: https://igtradingmaster.github.io/LOGIN/?ref= <span id="fullReferralLink"></span></p>
+        <p>Referral Link: https://igtradingmaster.github.io/igtradingmaster/?ref= <span id="fullReferralLink"></span></p>
         <div id="referralLink" style="display: none;">
           <button type="button" onclick="copyReferralLink()">Copy Referral Link</button> <ul></ul>
           <p>Your total Invited: <span id="totalInvited"></span></p>
