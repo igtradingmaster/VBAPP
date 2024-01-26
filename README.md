@@ -623,7 +623,3 @@ function searchUser() {
           <button type="button" onclick="copyReferralLink()">Copy Referral Link</button> <ul></ul>
           <p>Your total Invited: <span id="totalInvited"></span></p>
         </div>
-      </div>
-     </form>
-</body>
-</html>
