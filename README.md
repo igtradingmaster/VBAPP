@@ -500,7 +500,7 @@
     }
 
     function copyReferralLink() {
-      var baseUrl = "https://igtradingmaster.github.io/LOGIN/";
+      var baseUrl = "https://igtradingmaster.github.io/igtradingmaster/";
       var referralCode = getCurrentUser().userId;
 
       // Append the referral code to the URL
