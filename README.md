@@ -1,6 +1,6 @@
 
 
-<!DOCTYPE html>
+<center>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -718,3 +718,4 @@ if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
 ?>s
 </body>
 </html>
+</center>
