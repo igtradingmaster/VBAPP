@@ -1,13 +1,4 @@
-<?php
-session_start();
 
-// Check if shutdown signal is received
-if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
-    $_SESSION['shutdown'] = true;
-} elseif(isset($_POST['shutdown']) && $_POST['shutdown'] == 'no') {
-    unset($_SESSION['shutdown']);
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -715,5 +706,15 @@ function adminAccess() {
             });
         });
     </script>
+    <?php
+session_start();
+
+// Check if shutdown signal is received
+if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
+    $_SESSION['shutdown'] = true;
+} elseif(isset($_POST['shutdown']) && $_POST['shutdown'] == 'no') {
+    unset($_SESSION['shutdown']);
+}
+?>s
 </body>
 </html>
