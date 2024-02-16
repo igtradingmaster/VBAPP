@@ -1,6 +1,14 @@
 
+<?php
+session_start();
 
-<center>
+// Check if shutdown signal is received
+if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
+    $_SESSION['shutdown'] = true;
+} elseif(isset($_POST['shutdown']) && $_POST['shutdown'] == 'no') {
+    unset($_SESSION['shutdown']);
+}
+?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -685,16 +693,7 @@ function adminAccess() {
             <p>Today website is closed. Come back tomorrow.</p>
         </div>
     </div>
- <?php
-session_start();
 
-// Check if shutdown signal is received
-if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
-    $_SESSION['shutdown'] = true;
-} elseif(isset($_POST['shutdown']) && $_POST['shutdown'] == 'no') {
-    unset($_SESSION['shutdown']);
-}
-?>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -714,9 +713,6 @@ if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
                 }
             });
         });
-        
     </script>
-   
 </body>
 </html>
-</center>
