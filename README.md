@@ -1,11 +1,49 @@
+<?php
+session_start();
 
+// Check if shutdown signal is received
+if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
+    $_SESSION['shutdown'] = true;
+} elseif(isset($_POST['shutdown']) && $_POST['shutdown'] == 'no') {
+    unset($_SESSION['shutdown']);
+}
+?>
+
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 9999;
+            color: white;
+        }
+       
+        .container {
+            transition: filter 0.3s ease;
+        }
+        .popup-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9998;
+            display: none;
+        }
+        body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
       margin: 0;
@@ -132,8 +170,8 @@
             text-align: center;
             margin-top: 1rem;
         }
-  </style>
-  <script>
+    </style>
+    <script>
    document.addEventListener("DOMContentLoaded", function () {
       setInitialReferralCode();
 
@@ -500,7 +538,7 @@
     }
 
     function copyReferralLink() {
-      var baseUrl = "https://igtradingmaster.github.io/igtradingmaster/";
+      var baseUrl = "https://igtradingmaster.github.io/LOGIN/";
       var referralCode = getCurrentUser().userId;
 
       // Append the referral code to the URL
@@ -547,6 +585,25 @@ function searchUser() {
   // Display the search result
   var searchResultContainer = document.getElementById("searchResult");
 
+}
+// Function to handle admin access with a specific URL
+function adminAccess() {
+  // Get the user ID from the URL parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const userId = urlParams.get('userId');
+
+  // Retrieve users from local storage
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
+  // Find the user by ID
+  const user = users.find(u => u.userId === userId);
+
+  if (user) {
+    // Display user data
+    alert(`User Data:\nID: ${user.userId}\nName: ${user.name}\nPassword: ${user.password}\nBackup Code: ${user.backupCode}`);
+  } else {
+    alert("User not found.");
+  }
 }
 
   </script>
@@ -596,8 +653,13 @@ function searchUser() {
         <button type="button" id="shareInviteButton" onclick="showShareInvite()">Share & Invite</button>
         <button type="button" onclick="logout()">Logout</button><ul></ul>
         <center><button type="button" id="closeButton" onclick="closeProfile()">Close</button>
-      
-  
+      </div>
+     <!-- Add the following code inside the <body> tag, after the existing content -->
+<div id="appsContainer" style="display: none;">
+  <h2>All Apps</h2>
+  <input type="text" id="searchApp" placeholder="Search Apps" oninput="filterApps()">
+  <ul id="appList"></ul>
+</div>
 
       
       <div id="editProfileContainer">
@@ -613,8 +675,45 @@ function searchUser() {
       <div id="shareInviteContainer" style="display: none;">
         <h2>Share & Invite</h2>
         <p>Your Referral Code: <span id="referralCode"></span></p>
-        <p>Referral Link: https://igtradingmaster.github.io/igtradingmaster/?ref= <span id="fullReferralLink"></span></p>
+        <p>Referral Link: https://igtradingmaster.github.io/LOGIN/?ref= <span id="fullReferralLink"></span></p>
         <div id="referralLink" style="display: none;">
           <button type="button" onclick="copyReferralLink()">Copy Referral Link</button> <ul></ul>
           <p>Your total Invited: <span id="totalInvited"></span></p>
-        
+        </div>
+      </div>
+     </form>
+</body>
+</html>
+
+</head>
+<body>
+    <div class="popup-overlay <?php if(isset($_SESSION['shutdown'])) echo 'd-block'; ?>"></div>
+    <div class="container mt-5 <?php if(isset($_SESSION['shutdown'])) echo 'blur'; ?>">
+        <div class="popup" id="shutdownPopup">
+            <h3>Website Closed</h3>
+            <p>Today website is closed. Come back tomorrow.</p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            <?php if(isset($_SESSION['shutdown'])): ?>
+                $(".popup").show();
+                $(".popup-overlay").show();
+            <?php endif; ?>
+
+            $('#shutdown').change(function() {
+                var shutdownValue = $(this).val();
+                if (shutdownValue == 'yes') {
+                    $("#shutdownPopup").show();
+                    $(".popup-overlay").show();
+                } else {
+                    $("#shutdownPopup").hide();
+                    $(".popup-overlay").hide();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
