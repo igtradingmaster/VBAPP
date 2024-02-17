@@ -1,4 +1,4 @@
-<?php
+<script>
 session_start();
 // Check if shutdown signal is received
 if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
@@ -6,7 +6,7 @@ if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
 } elseif(isset($_POST['shutdown']) && $_POST['shutdown'] == 'no') {
     unset($_SESSION['shutdown']);
 }
-?>
+</script>
 
 <html lang="en">
 <head>
