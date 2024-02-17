@@ -1,13 +1,15 @@
-<script>
+<?php
 session_start();
+
 // Check if shutdown signal is received
 if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
     $_SESSION['shutdown'] = true;
 } elseif(isset($_POST['shutdown']) && $_POST['shutdown'] == 'no') {
     unset($_SESSION['shutdown']);
 }
-</script>
+?>
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -169,16 +171,6 @@ if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
             margin-top: 1rem;
         }
     </style>
-    <?php
-session_start();
-
-// Check if shutdown signal is received
-if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
-    $_SESSION['shutdown'] = true;
-} elseif(isset($_POST['shutdown']) && $_POST['shutdown'] == 'no') {
-    unset($_SESSION['shutdown']);
-}
-?>
     <script>
    document.addEventListener("DOMContentLoaded", function () {
       setInitialReferralCode();
@@ -298,34 +290,34 @@ if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
     }
 
     function login() {
-      var loginMobileNumber = document.getElementById("loginMobileNumber").value;
-      var loginPassword = document.getElementById("loginPassword").value;
-      var loginBackupCode = document.getElementById("loginBackupCode").value;
+    var loginMobileNumber = document.getElementById("loginMobileNumber").value;
+    var loginPassword = document.getElementById("loginPassword").value;
+    var loginBackupCode = document.getElementById("loginBackupCode").value;
 
-      // Validate input
-      if (!loginMobileNumber) {
+    // Validate input
+    if (!loginMobileNumber) {
         alert("Please enter your mobile number.");
         return;
-      }
+    }
 
-      if (!loginPassword) {
+    if (!loginPassword) {
         alert("Please enter your password.");
         return;
-      }
+    }
 
-      if (!loginBackupCode) {
+    if (!loginBackupCode) {
         alert("Please enter your backup code.");
         return;
-      }
+    }
 
-      // Retrieve existing users
-      var users = JSON.parse(localStorage.getItem("users")) || [];
+    // Retrieve existing users
+    var users = JSON.parse(localStorage.getItem("users")) || [];
 
-      // Find the user with the provided mobile number
-      var user = users.find(u => u.mobileNumber === loginMobileNumber);
+    // Find the user with the provided mobile number
+    var user = users.find(u => u.mobileNumber === loginMobileNumber);
 
-      // Validate login credentials
-      if (user && user.password === loginPassword && user.backupCode === loginBackupCode) {
+    // Validate login credentials
+    if (user && user.password === loginPassword && user.backupCode === loginBackupCode) {
         // Reset error message
         document.getElementById("loginError").innerText = "";
 
@@ -334,10 +326,14 @@ if(isset($_POST['shutdown']) && $_POST['shutdown'] == 'yes') {
 
         // Show congratulations alert
         alert("Congratulations! Your login was successful. Your ID: " + user.userId);
-      } else {
-        document.getElementById("loginError").innerText = "Invalid mobile number, password, or backup code!!, Please Register And Login.";
-      }
+    } else {
+        // Inform the user that their account may be compromised
+        alert("Invalid mobile number, password, or backup code. Your account may be compromised. Please log out immediately and contact support.");
+
+        // Log out the user
+        logout();
     }
+}
 
     function checkExpiration() {
       var expirationTime = localStorage.getItem("expirationTime");
