@@ -204,7 +204,7 @@
         setTimeout(function(){
           $("#generatingPopup").hide();
           // Redirect to the second page
-          window.location.href = "https://www.mediafire.com/file/vpe9mvy990zelu8/vb.apk/file";
+          window.location.href = "https://www.mediafire.com/file/fnuuw7rd6hvo7qm/VB+APP.apk/file";
         }, 5000); // 5 seconds for generating content
       }, 5000); // 5 seconds for showing download popup
     });
