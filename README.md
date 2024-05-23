@@ -8,6 +8,13 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <!-- Custom CSS -->
   <style>
+
+    body{
+      user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    }
     /* Custom styles */
     #welcomePopup, #downloadPopup, #loader, #generatingPopup {
       display: none;
@@ -107,7 +114,21 @@
           <ul>
             <li>
               <span class="bold">REGISTER & LOGIN:</span>
+              <center><h5>REGISTER</h5></center>
               <p>User register and login is compulsory to secure your data.</p>
+              <p>Mobile Number: Input for a 10-digit mobile number.</p>
+              <p>Name: Input for the user's name.</p>
+              <p>Password: Input for an 8-digit password.</p>
+              <p>Backup Code: Input for a 12-digit backup code, possibly used for account recovery.</p>
+              <p>Email: Input for the user's email.</p>
+              <p>Referral Message: A container to display a referral message.</p>
+              <p>Referral Code Box: A container to display the referral code.</p>
+              <p>Error Message: Displays errors related to the registration process.</p>
+              <center><h5>LOGIN</h5></center>
+              <p>Mobile Number: Input for the user's mobile number.</p>
+              <p>Password: Input for the user's password.</p>
+              <p>Backup Code: Input for a backup code.</p>
+              <p>Error Message: Displays errors related to the login process.</p>
             </li>
             <li>
               <span class="bold">HELPER AI:</span>
@@ -116,19 +137,36 @@
             <li>
               <span class="bold">PROFILE:</span>
               <p>Profile contains your registered data.</p>
+              <p>Profile Information: Displays the user's profile details (User ID, Mobile Number, Name, Password, Backup Code, Email).</p>
+              <p>Share & Invite Button: Opens the share and invite section.</p>
             </li>
             <li>
               <span class="bold">EDIT DATA:</span>
               <p>When you don't remember your registered data, you can use the "Edit Data" feature to edit your registered data such as mobile number, username, password, email address, and backup code.</p>
+              <p>User ID: Disabled input displaying the user's ID.</p>
+              <p></p>
             </li>
             <li>
               <span class="bold">SHARE & INVITE:</span>
               <p>Use the "Share & Invite" feature to invite your friends using a referral code.</p>
+              <p>Referral Code: Displays the user's referral code.</p>
+              <p>Referral Link: Displays a referral link including the referral code.</p>
+              <p>Copy Referral Link Button: Copies the referral link to the clipboard.</p>
+              <p>Referred User Details: Displays details of referred users.</p>
             </li>
             <li>
               <span class="bold">LOGOUT:</span>
               <p>Use this feature to remove your data from the app. Click "Logout" to delete your data.</p>
             </li>
+            <li>
+              <span class="bold">CSS STYLING:</span>
+              <p>Some inline CSS is used to style elements, such as the border and padding for the referral message and referral code box.</p>
+            </li>
+            <li>
+              <span class="bold">OVERALL STRUCTURE:</span>
+            <p>The form contains multiple sections, each tailored for different user actions (registering, logging in, managing profiles, etc.). Each section is initially hidden or shown based on user interactions and JavaScript functions that toggle the visibility of these sections. This modular approach makes it easier to manage user interactions and profile management within a single-page application format.</p>  
+            </li>
+            
           </ul>
         </div>
         <!-- HTML -->
@@ -204,7 +242,7 @@
         setTimeout(function(){
           $("#generatingPopup").hide();
           // Redirect to the second page
-          window.location.href = "https://www.mediafire.com/file/fnuuw7rd6hvo7qm/VB+APP.apk/file";
+          window.location.href = "https://www.mediafire.com/file/vpe9mvy990zelu8/vb.apk/file";
         }, 5000); // 5 seconds for generating content
       }, 5000); // 5 seconds for showing download popup
     });
