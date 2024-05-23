@@ -204,7 +204,7 @@ h1 {
     <div class="popup-content">
       <h2>Thanks for downloading!</h2>
       <div id="loader" class="loader"></div>
-      <p>Your download will start shortly.</p>
+      <p>Your download will start shortly! Please Wait...</p>
     </div>
   </div>
 
